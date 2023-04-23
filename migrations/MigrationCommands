@@ -1,0 +1,4 @@
+flask db init
+flask db migrate
+flask db stamp head
+flask db upgrade
