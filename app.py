@@ -73,7 +73,8 @@ def anchorify(url, mailto=False):
 
 
 def urldetector(para):
-    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|" \
+            r"(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
     urls = re.findall(regex, para)
     for url in urls:
         para = para.replace(url[0], anchorify(url[0]))
@@ -136,41 +137,31 @@ def aboutme():
         2: "Not actively, but up for an opportunity"
     }
     user_details = AboutMe.query.filter_by(userid=userid).first()
-    email = anchorify(user_details.email, mailto=True)
-    summary = user_details.summary
-    about = user_details.about
-    company = user_details.company
-    dpfile = user_details.dpfile
-    if not dpfile:
-        dpfile = "profile_avatar.jpg"
-    designation = user_details.designation
+    aboutparams = {}
+    aboutparams["email"] = anchorify(user_details.email, mailto=True)
+    aboutparams["summary"] = user_details.summary
+    aboutparams["about"] = urldetector(user_details.about)
+    aboutparams["company"] = user_details.company
+    aboutparams["dpfile"] = user_details.dpfile
+    if not aboutparams["dpfile"]:
+        aboutparams["dpfile"] = "profile_avatar.jpg"
+    aboutparams["designation"] = user_details.designation
     dob = user_details.dob
     if dob:
-        formatted_dob = dobformat(dob)
+        aboutparams["dob"] = dobformat(dob)
     else:
-        formatted_dob = None
-    phone = user_details.phone
-    city = user_details.city
-    website = anchorify(user_details.website)
-    availability = job_availability.get(user_details.availability)
-    if formatted_dob:
-        age = calculateage(dob)
+        aboutparams["dob"] = None
+    aboutparams["phone"] = user_details.phone
+    aboutparams["city"] = user_details.city
+    aboutparams["website"] = anchorify(user_details.website)
+    aboutparams["availability"] = job_availability.get(user_details.availability)
+    if aboutparams["dob"]:
+        aboutparams["age"] = calculateage(dob)
     else:
-        age = None
+        aboutparams["age"] = None
     return render_template(
         "about.html",
-        summary=summary,
-        about=urldetector(about),
-        email=email,
-        company=company,
-        dpfile=dpfile,
-        designation=designation,
-        dob=formatted_dob,
-        phone=phone,
-        age=age,
-        city=city,
-        website=website,
-        availability=availability,
+        **aboutparams,
         skilldesc="Web/Application Developer, who has working experience with Data Engineering and DevOps automation and pipelines.",
         skill1="Python",
         progress1="100",
