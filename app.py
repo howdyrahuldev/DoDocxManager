@@ -68,7 +68,8 @@ def calculateage(dob):
 
 def anchorify(url, mailto=False):
     if not mailto:
-        return f'<a target="_blank" href="{url}">{url}</a>'
+        link = f"https://{url}" if not url.startswith("http") else url
+        return f'<a target="_blank" href="{link}">{url}</a>'
     return f'<a target="_blank" href="mailto:{url}">{url}</a>'
 
 

@@ -75,10 +75,6 @@
     <section id="about" class="about">
       <div class="container" data-aos="fade-up">
         <div class="section-title">
-          <p align="right">
-<!--            <a href="./addormodify/" type="button" class="anchor">Update</a>-->
-            <button type="button" onclick="location.href = './addormodify/';">Update</button>
-          </p>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul class=flashes>
@@ -90,6 +86,10 @@
     {% endwith %}
     {% block body %}{% endblock %}
           <h2>About</h2>
+          <p align="right">
+<!--            <a href="./addormodify/" type="button" class="anchor">Update</a>-->
+            <button type="button" onclick="location.href = './addormodify/';">Update</button>
+          </p>
           <p>{{ summary }}</p>
         </div>
 
@@ -135,6 +135,10 @@
 
         <div class="section-title">
           <h2>Skills</h2>
+          <p align="right">
+<!--            <a href="./addormodify/" type="button" class="anchor">Update</a>-->
+            <button type="button" onclick="location.href = './modifyskills/';">Update</button>
+          </p>
           <p>{{ skilldesc }}</p>
         </div>
 
