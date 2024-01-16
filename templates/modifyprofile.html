@@ -83,36 +83,36 @@
               </div>
               <div class="form-group mt-3">
                 <div class="text-center">
-                  <input maxlength="64000" minlength="50" name="summary" class="form-control" id="summary" placeholder="Summary">
+                  <input maxlength="64000" minlength="50" name="summary" class="form-control" id="summary" placeholder="Summary: {{ summary }}">
                 </div>
               </div>
               <div class="form-group mt-3">
                 <div class="text-center">
-                  <textarea maxlength="16000000" minlength="500" name="about" class="form-control" id="about" placeholder="About"></textarea>
+                  <textarea maxlength="16000000" minlength="500" name="about" class="form-control" id="about" placeholder="About: {{ about }}"></textarea>
                 </div>
               </div>
             </br>
               <div class="row">
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="text" name="company" class="form-control" id="company" placeholder="Company">
+                  <input type="text" name="company" class="form-control" id="company" placeholder="Company: {{ company }}">
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="text" name="designation" class="form-control" id="designation" placeholder="Designation">
+                  <input type="text" name="designation" class="form-control" id="designation" placeholder="Designation: {{ designation }}">
                 </div>
               </div>
             </br>
               <div class="row">
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="text" name="website" class="form-control" id="website" placeholder="Website">
+                  <input type="text" name="website" class="form-control" id="website" placeholder="Website: {{ website }}">
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" name="dob" id="dob" placeholder="Birthday">
+                  <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" class="form-control" name="dob" id="dob" placeholder="Birthday: {{ dob }}">
                 </div>
               </div>
               </br>
               <div class="row">
                 <div class="col-md-6 form-group mt-3 mt-md-0">
-                  <input type="tel" class="form-control" name="phone" id="phone" placeholder="Phone">
+                  <input type="tel" class="form-control" name="phone" id="phone" placeholder="Phone: {{ phone }}">
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
                   <input type="email" class="form-control" name="email" id="email" placeholder="Email: {{ email }}">
@@ -122,14 +122,14 @@
               <div class="row">
                 <div class="col-md-6 form-group mt-3 mt-md-0">
                   <label>&nbsp&nbsp&nbsp&nbsp&nbsp
-                  <input type="text" class="form-control" name="city" id="city" placeholder="City">
+                  <input type="text" class="form-control" name="city" id="city" placeholder="City: {{ city }}">
                   </label>
                 </div>
                 <div class="col-md-6 form-group mt-3 mt-md-0">
 <!--                  <input type="text" class="form-control" name="availability" id="availability" placeholder="Available for a new job?">-->
                   <label>Looking for a new job?
                   <select class="form-control" name="availability" id="availability">
-                    <option></option>
+                    <option>{{availability}}</option>
                     <option value="0">Not now</option>
                     <option value="1">Yes, actively</option>
                     <option value="2">Not actively, but up for an opportunity</option>
@@ -143,6 +143,7 @@
 <!--                <div class="sent-message">Your have been successfully logged in. Redirecting to the Home Page!</div>-->
 <!--              </div>-->
               <div class="text-center">
+                <button class="btn-about" onclick="window.history.go(-1); return false;" style="background-color:red;">Cancel</button>
                 <button class="btn-about" type="submit">Update Details</button>
               </div>
               <br>
