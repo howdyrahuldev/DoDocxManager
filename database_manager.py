@@ -12,6 +12,3 @@ def create_db(dbname="myappdb.db"):
         finally:
             if conn:
                 conn.close()
-
-
-

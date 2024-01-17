@@ -35,12 +35,11 @@ CITY = "city"
 WEBSITE = "website"
 AVAILABILITY = "availability"
 AGE = "age"
-JOB_ACTIVITY = \
-    {
-        0: "Not now",
-        1: "Yes, actively",
-        2: "Not actively, but up for an opportunity"
-    }
+JOB_ACTIVITY = {
+    0: "Not now",
+    1: "Yes, actively",
+    2: "Not actively, but up for an opportunity",
+}
 
 
 # Pages and Avatar Constants

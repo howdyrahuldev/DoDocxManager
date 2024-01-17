@@ -23,7 +23,9 @@ def register():
         password = generate_password_hash(request.form[PASSWORD])
         user_exists = Users.query.filter_by(userid=userid).first()
         if not user_exists:
-            user = Users(userid=userid, email=email, username=username, password=password)
+            user = Users(
+                userid=userid, email=email, username=username, password=password
+            )
             db.session.add(user)
             db.session.commit()
             flash("User registered successfully! Login now!", MESSAGE)
@@ -143,9 +145,13 @@ def add_or_modify():
         global ABOUTME
         about_fields = copy.deepcopy(ABOUTME)
         if about_fields.get(EMAIL):
-            about_fields[EMAIL] = about_fields[EMAIL].split("\"")[4].replace("/a", "").strip("<>")
+            about_fields[EMAIL] = (
+                about_fields[EMAIL].split('"')[4].replace("/a", "").strip("<>")
+            )
         if about_fields.get(WEBSITE):
-            about_fields[WEBSITE] = about_fields[WEBSITE].split("\"")[4].replace("/a", "").strip("<>")
+            about_fields[WEBSITE] = (
+                about_fields[WEBSITE].split('"')[4].replace("/a", "").strip("<>")
+            )
         return render_template(MODIFY_PAGE, **about_fields)
 
     elif request.method == POST_METHOD:
@@ -209,18 +215,18 @@ def add_or_modify():
         finally:
             if not updateflag:
                 aboutme = AboutMe(
-                            userid=userid,
-                            email=email,
-                            summary=summary,
-                            about=about,
-                            company=company,
-                            dpfile=dpfile.filename,
-                            designation=designation,
-                            dob=dob,
-                            phone=phone,
-                            city=city,
-                            website=website,
-                            availability=availability,
+                    userid=userid,
+                    email=email,
+                    summary=summary,
+                    about=about,
+                    company=company,
+                    dpfile=dpfile.filename,
+                    designation=designation,
+                    dob=dob,
+                    phone=phone,
+                    city=city,
+                    website=website,
+                    availability=availability,
                 )
                 db.session.add(aboutme)
                 db.session.commit()

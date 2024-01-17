@@ -8,7 +8,11 @@ def calculateage(dob):
     year, month, day = list(map(lambda s: int(s), dob.split("-")))
     birthDate = date(year, month, day)
     today = date.today()
-    age = today.year - birthDate.year - ((today.month, today.day) < (birthDate.month, birthDate.day))
+    age = (
+        today.year
+        - birthDate.year
+        - ((today.month, today.day) < (birthDate.month, birthDate.day))
+    )
     return f"{age} years"
 
 
@@ -20,8 +24,10 @@ def anchorify(url, mailto=False):
 
 
 def urldetector(para):
-    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|" \
-            r"(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    regex = (
+        r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|"
+        r"(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    )
     urls = re.findall(regex, para)
     for url in urls:
         para = para.replace(url[0], anchorify(url[0]))
@@ -36,6 +42,7 @@ def check_login(routefunc):
             flash("You are not logged in. Please login.", "message")
             return redirect(url_for("login"))
         return routefunc()
+
     return validate
 
 

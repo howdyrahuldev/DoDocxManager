@@ -28,7 +28,21 @@ class AboutMe(db.Model):
     availability = db.Column("Availability", db.Integer())
     website = db.Column("Website", db.String(100))
 
-    def __init__(self, userid, email, summary, about, company, dpfile, designation, dob, phone, city, availability, website):
+    def __init__(
+        self,
+        userid,
+        email,
+        summary,
+        about,
+        company,
+        dpfile,
+        designation,
+        dob,
+        phone,
+        city,
+        availability,
+        website,
+    ):
         self.userid = userid
         self.email = email
         self.summary = summary
