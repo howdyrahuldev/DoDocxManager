@@ -12,11 +12,11 @@ from datetime import timedelta
 ABOUTME = {}
 
 
-@app.route("/register/", methods=["GET", "POST"])
+@app.route("/register/", methods=[GET_METHOD, POST_METHOD])
 def register():
-    if request.method == "GET":
+    if request.method == GET_METHOD:
         return render_template(REGISTER_PAGE)
-    else:
+    elif request.method == POST_METHOD:
         userid = request.form[USERNAME]
         email = request.form[EMAIL]
         username = request.form[FULLNAME]
@@ -26,18 +26,18 @@ def register():
             user = Users(userid=userid, email=email, username=username, password=password)
             db.session.add(user)
             db.session.commit()
-            flash("User registered successfully! Login now!", "message")
-            return redirect(url_for("login"))
+            flash("User registered successfully! Login now!", MESSAGE)
+            return redirect(url_for(LOGIN))
         else:
-            flash("User already exists!", "message")
-            return redirect(url_for("register"))
+            flash("User already exists!", MESSAGE)
+            return redirect(url_for(REGISTER))
 
 
-@app.route("/login/", methods=["GET", "POST"])
+@app.route("/login/", methods=[GET_METHOD, POST_METHOD])
 def login():
-    if request.method == "GET":
+    if request.method == GET_METHOD:
         return render_template(LOGIN_PAGE)
-    elif request.method == "POST":
+    elif request.method == POST_METHOD:
         userid = request.form[USERNAME]
         password = request.form[PASSWORD]
         user_exists = Users.query.filter_by(userid=userid).first()
@@ -49,13 +49,13 @@ def login():
                 session[USERID] = userid
                 session[USERNAME] = user_exists.username
             else:
-                flash("Credentials don't match.", "message")
-                return redirect(url_for("login"))
+                flash("Credentials don't match.", MESSAGE)
+                return redirect(url_for(LOGIN))
         else:
-            flash("Invalid user", "message")
-            return redirect(url_for("login"))
+            flash("Invalid user", MESSAGE)
+            return redirect(url_for(LOGIN))
 
-        return redirect(url_for("homepage"))
+        return redirect(url_for(HOME))
 
 
 @app.route("/logout/")
@@ -63,16 +63,16 @@ def logout():
     if session.get(USERID, None):
         del session[USERID]
         del session[USERNAME]
-        flash("You've been successfully logged out!", "message")
+        flash("You've been successfully logged out!", MESSAGE)
     else:
-        flash("You've already been logged out!", "message")
-    return redirect(url_for("login"))
+        flash("You've already been logged out!", MESSAGE)
+    return redirect(url_for(LOGIN))
 
 
 @app.route("/")
 @app.route("/home/")
 @check_login
-def homepage():
+def home_page():
     userid = session[USERID]
     username = session[USERNAME]
     try:
@@ -134,12 +134,12 @@ def about_me():
     )
 
 
-@app.route("/about/addormodify/", methods=["GET", "POST"])
+@app.route("/about/addormodify/", methods=[GET_METHOD, POST_METHOD])
 @check_login
-def addormodify():
+def add_or_modify():
     userid = session[USERID]
     user_exists = Users.query.filter_by(userid=userid).first()
-    if request.method == "GET":
+    if request.method == GET_METHOD:
         global ABOUTME
         about_fields = copy.deepcopy(ABOUTME)
         if about_fields.get(EMAIL):
@@ -148,7 +148,7 @@ def addormodify():
             about_fields[WEBSITE] = about_fields[WEBSITE].split("\"")[4].replace("/a", "").strip("<>")
         return render_template(MODIFY_PAGE, **about_fields)
 
-    elif request.method == "POST":
+    elif request.method == POST_METHOD:
         updateflag = False
         filepath = PIC_PATH
         email = request.form.get(EMAIL)
@@ -224,8 +224,8 @@ def addormodify():
                 )
                 db.session.add(aboutme)
                 db.session.commit()
-                flash("Details inserted successfully!", "message")
+                flash("Details inserted successfully!", MESSAGE)
             else:
                 db.session.commit()
-                flash("Details updated successfully!", "message")
-            return redirect(url_for("about_me"))
+                flash("Details updated successfully!", MESSAGE)
+            return redirect(url_for(ABOUT_ME))

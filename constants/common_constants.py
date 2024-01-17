@@ -5,6 +5,19 @@ DATABASE_URI = "SQLALCHEMY_DATABASE_URI"
 TRACK_MODIFICATION = "SQLALCHEMY_TRACK_MODIFICATIONS"
 
 
+# HTTP Methods
+GET_METHOD = "GET"
+POST_METHOD = "POST"
+
+
+# Generic Keywords
+MESSAGE = "message"
+LOGIN = "login"
+REGISTER = "register"
+HOME = "home_page"
+ABOUT_ME = "about_me"
+
+
 # User Credentials
 USERID = "userid"
 USERNAME = "username"
