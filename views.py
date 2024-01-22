@@ -1,6 +1,6 @@
 from app import app, db
 from common_functions.module import *
-from flask import session, render_template, request
+from flask import session, render_template, request, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from database.models import AboutMe, Users
 from constants.common_constants import *
@@ -8,8 +8,6 @@ from sqlalchemy.exc import OperationalError
 import copy
 import os
 from datetime import timedelta
-
-ABOUTME = {}
 
 
 @app.route("/register/", methods=[GET_METHOD, POST_METHOD])
@@ -63,8 +61,7 @@ def login():
 @app.route("/logout/")
 def logout():
     if session.get(USERID, None):
-        del session[USERID]
-        del session[USERNAME]
+        session.clear()
         flash("You've been successfully logged out!", MESSAGE)
     else:
         flash("You've already been logged out!", MESSAGE)
@@ -81,10 +78,10 @@ def home_page():
         query = AboutMe.query.filter_by(userid=userid).first()
         if not query:
             return render_template(ALT_INDEX, name=username.title())
-        aboutme = query.summary
+        summary = query.summary
     except OperationalError:
         return render_template(ALT_INDEX, name=username.title())
-    return render_template(INDEX_PAGE, name=username.title(), aboutme=aboutme)
+    return render_template(INDEX_PAGE, name=username.title(), aboutme=summary)
 
 
 @app.route("/about/")
@@ -96,7 +93,7 @@ def about_me():
     about_fields = dict()
     about_fields[EMAIL] = anchorify(user_details.email, mailto=True)
     about_fields[SUMMARY] = user_details.summary
-    about_fields[ABOUT] = urldetector(user_details.about)
+    about_fields[ABOUT] = url_detector(user_details.about)
     about_fields[COMPANY] = user_details.company
     about_fields[DPFILE] = user_details.dpfile
     if not about_fields[DPFILE]:
@@ -104,7 +101,7 @@ def about_me():
     about_fields[DESIGNATION] = user_details.designation
     dob = user_details.dob
     if dob:
-        about_fields[DOB] = dobformat(dob)
+        about_fields[DOB] = dob_format(dob)
     else:
         about_fields[DOB] = None
     about_fields[PHONE] = user_details.phone
@@ -112,11 +109,11 @@ def about_me():
     about_fields[WEBSITE] = anchorify(user_details.website)
     about_fields[AVAILABILITY] = JOB_ACTIVITY.get(user_details.availability)
     if about_fields[DOB]:
-        about_fields[AGE] = calculateage(dob)
+        about_fields[AGE] = calculate_age(dob)
     else:
         about_fields[AGE] = None
-    global ABOUTME
-    ABOUTME = about_fields
+
+    session[ABOUT_ME] = about_fields
     return render_template(
         ABOUT_PAGE,
         **about_fields,
@@ -142,8 +139,7 @@ def add_or_modify():
     userid = session[USERID]
     user_exists = Users.query.filter_by(userid=userid).first()
     if request.method == GET_METHOD:
-        global ABOUTME
-        about_fields = copy.deepcopy(ABOUTME)
+        about_fields = copy.deepcopy(session.get(ABOUT_ME))
         if about_fields.get(EMAIL):
             about_fields[EMAIL] = (
                 about_fields[EMAIL].split('"')[4].replace("/a", "").strip("<>")

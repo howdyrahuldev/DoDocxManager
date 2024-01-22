@@ -2,16 +2,17 @@ import re
 from datetime import date
 from functools import wraps
 from flask import session, redirect, url_for, flash
+from constants.common_constants import USERID, MESSAGE, LOGIN
 
 
-def calculateage(dob):
+def calculate_age(dob):
     year, month, day = list(map(lambda s: int(s), dob.split("-")))
-    birthDate = date(year, month, day)
+    birth_date = date(year, month, day)
     today = date.today()
     age = (
         today.year
-        - birthDate.year
-        - ((today.month, today.day) < (birthDate.month, birthDate.day))
+        - birth_date.year
+        - ((today.month, today.day) < (birth_date.month, birth_date.day))
     )
     return f"{age} years"
 
@@ -23,7 +24,7 @@ def anchorify(url, mailto=False):
     return f'<a target="_blank" href="mailto:{url}">{url}</a>'
 
 
-def urldetector(para):
+def url_detector(para):
     regex = (
         r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|"
         r"(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
@@ -34,19 +35,19 @@ def urldetector(para):
     return para
 
 
-def check_login(routefunc):
-    @wraps(routefunc)
+def check_login(route_func):
+    @wraps(route_func)
     def validate():
-        userid = session.get("userid", None)
+        userid = session.get(USERID, None)
         if not userid:
-            flash("You are not logged in. Please login.", "message")
-            return redirect(url_for("login"))
-        return routefunc()
+            flash("You are not logged in. Please login.", MESSAGE)
+            return redirect(url_for(LOGIN))
+        return route_func()
 
     return validate
 
 
-def dobformat(dob):
+def dob_format(dob):
     months = {
         "01": "January",
         "02": "February",
