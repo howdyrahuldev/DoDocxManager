@@ -48,6 +48,7 @@ def login():
                 session.modified = True
                 session[USERID] = userid
                 session[USERNAME] = user_exists.username
+                session[ABOUT_ME] = DEFAULT_USER_DETAILS
             else:
                 flash("Credentials don't match.", MESSAGE)
                 return redirect(url_for(LOGIN))
@@ -113,7 +114,8 @@ def about_me():
     else:
         about_fields[AGE] = None
 
-    session[ABOUT_ME] = about_fields
+    if about_fields:
+        session[ABOUT_ME] = about_fields
     return render_template(
         ABOUT_PAGE,
         **about_fields,
@@ -140,11 +142,11 @@ def add_or_modify():
     user_exists = Users.query.filter_by(userid=userid).first()
     if request.method == GET_METHOD:
         about_fields = copy.deepcopy(session.get(ABOUT_ME))
-        if about_fields.get(EMAIL):
+        if about_fields.get(EMAIL) and HREF in about_fields.get(EMAIL):
             about_fields[EMAIL] = (
                 about_fields[EMAIL].split('"')[4].replace("/a", "").strip("<>")
             )
-        if about_fields.get(WEBSITE):
+        if about_fields.get(WEBSITE) and HREF in about_fields.get(WEBSITE):
             about_fields[WEBSITE] = (
                 about_fields[WEBSITE].split('"')[4].replace("/a", "").strip("<>")
             )
